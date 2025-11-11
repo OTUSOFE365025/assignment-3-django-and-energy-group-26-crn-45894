@@ -58,11 +58,11 @@ Run the project
 py -3 main.py
 ```
 
-![alt text](image.png)
+![alt text](terminal_output.png)
 
 Open `http://127.0.0.1:8000/` in a browser. Enter any demo code (for example `1001`) and click **Scan** as many times as you like. Each scan appends to the list and updates the subtotal automatically. Stop the server with `CTRL+C`.
 
-![alt text](image-1.png)
+![alt text](website_output.png)
 
 Prefer standard Django commands?
 
