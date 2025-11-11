@@ -1,10 +1,9 @@
 # Assignment 3 – Django and Energy (Group 26 · CRN 45894)
 
-Hi! This repository documents and implements my work for Assignment 3. Part 1 is a Django-based cash register demo, and Part 2 captures our team’s energy-efficiency architecture analysis. The README is written in my own words so the TA can see exactly what I built and how to verify it quickly.
+- Welcome to our Assignment 3 workspace for Django and Energy Efficiency. This repo pairs a hands-on Django cash register demo—built around the ORM and easy-to-run scripts—with an architectural write-up focused on energy-efficient mobile systems. Everything is written in our own words so reviewers can understand what we built, why we made our design choices, and how to run the demo in just a few steps.
 
----
 
-## 🚀 What’s in this project?
+## What’s in this project?
 
 - **Cash Register Demo (Django ORM):** A lightweight product lookup UI that lets me scan short UPC codes (`1001`…`1010`), append scanned items to a list, and watch the subtotal update instantly.
 - **Seeding & Convenience Runner:** `main.py` seeds demo products and launches the dev server in one command so the reviewer doesn’t need to remember multiple steps.
@@ -12,37 +11,69 @@ Hi! This repository documents and implements my work for Assignment 3. Part 1 is
 
 Stack: Python 3.13, Django 5.x, SQLite.
 
----
 
-## 🧭 How to run my demo (TA fast track)
+## Quick Start
 
 ```powershell
-# 1) Optional but recommended: create and activate a virtual environment
+# optional: create and activate a virtual environment
 py -3 -m venv .venv
 .\.venv\Scripts\activate
 
-# 2) Install Django once inside the venv
+# install dependencies once
 pip install django
 
-# 3) Seed products + start dev server (single command I prepared)
+# seed demo products and start the dev server
 py -3 main.py
 ```
+
+Alternatively, if you prefer the step-by-step layout from the assignment handout:
+
+Create a folder for your project on your local machine  
+```
+mkdir assignment3
+cd assignment3
+```
+
+Create a virtual environment and install Django  
+```
+py -3 -m venv .venv
+.\.venv\Scripts\activate
+pip install django
+```
+
+Download this assignment repository from GitHub  
+```
+git clone https://github.com/OTUSOFE365025/assignment-3-django-and-energy-group-26-crn-45894.git
+cd assignment-3-django-and-energy-group-26-crn-45894
+```
+
+Initialize the database  
+```
+py -3 manage.py migrate
+py -3 manage.py seed_products
+```
+
+Run the project  
+```
+py -3 main.py
+```
+
 ![alt text](image.png)
 
-Open a browser to `http://127.0.0.1:8000/`. Enter a short code like `1001` and press **Scan** repeatedly. The UI keeps a scrollable list of scanned items and updates the subtotal automatically. To stop the server, press `CTRL+C` in the terminal.
+Open `http://127.0.0.1:8000/` in a browser. Enter any demo code (for example `1001`) and click **Scan** as many times as you like. Each scan appends to the list and updates the subtotal automatically. Stop the server with `CTRL+C`.
 
-Alternate commands if you want full control:
+![alt text](image-1.png)
+
+Prefer standard Django commands?
 
 ```powershell
 py -3 manage.py migrate
 py -3 manage.py seed_products
 py -3 manage.py runserver
 ```
-![alt text](image-1.png)
 
----
 
-## 🗂 Repo map (where everything lives)
+## Repo map 
 
 | Path | Why it matters |
 | --- | --- |
@@ -59,7 +90,6 @@ Navigation tips:
 - ORM usage is easiest to see in `db/models.py` and the queries inside `db/views.py`.
 - The JavaScript that handles scanning and subtotal updates lives inline in the template (look for the `<script>` block near the bottom of `product_lookup.html`).
 
----
 
 ## Part 1 – Cash Register System
 
@@ -79,7 +109,6 @@ The goal was to identify the appropriate **reference architecture** and outline 
 **Outcome:**  
 A well-structured rich-client model that balances **availability**, **performance**, and **maintainability**, aligning with retail point-of-sale requirements.
 
----
 
 ## Part 2 – Energy Efficiency (Quality Attribute Scenario)
 
@@ -97,20 +126,17 @@ The analysis followed the *Energy Efficiency General Scenario* format and was su
 - Linked tactics to design concepts from *Software Architecture in Practice* and the *Design Concepts Catalog*.  
 - Submitted the formatted document as a **PDF on Canvas**.
 
----
 
 ## Contributors
 **Pranav Ashok** – Part 1 : Cash Register System  
 **Ivan Arudpiragasam** – Part 2 : Energy Efficiency  
 **Ahmad Amaree** – Documentation & Review
 
----
 
-## 📄 License
+## License
 
 Released under the MIT License.
 
----
 
-Thank you for reviewing my assignment! If anything is unclear or if you need screenshots/output in another format, just leave me feedback and I’ll provide it quickly.
+Thank you for reviewing our assignment!
 
