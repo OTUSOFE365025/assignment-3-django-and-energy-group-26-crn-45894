@@ -14,20 +14,6 @@ Stack: Python 3.13, Django 5.x, SQLite.
 
 ## Quick Start
 
-```powershell
-# optional: create and activate a virtual environment
-py -3 -m venv .venv
-.\.venv\Scripts\activate
-
-# install dependencies once
-pip install django
-
-# seed demo products and start the dev server
-py -3 main.py
-```
-
-Alternatively, if you prefer the step-by-step layout from the assignment handout:
-
 Create a folder for your project on your local machine  
 ```
 mkdir assignment3
