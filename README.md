@@ -1,101 +1,129 @@
-Django ORM Standalone
-=====================
+# Assignment 3 – Django and Energy (Group 26 · CRN 45894)
 
-![Django](https://img.shields.io/badge/Django_ORM-Standalone-blue)
-![Python](https://img.shields.io/badge/Python-yellow)
+- Welcome to our Assignment 3 workspace for Django and Energy Efficiency. This repo pairs a hands-on Django cash register demo—built around the ORM and easy-to-run scripts—with an architectural write-up focused on energy-efficient mobile systems. Everything is written in our own words so reviewers can understand what we built, why we made our design choices, and how to run the demo in just a few steps.
 
-Use the database components of Django without having to use the rest of Django (i.e. running a web server)! :tada: A typical use case for using this template would be if you are writing a python script and you would like the database functionality provided by Django, but have no need for the request/response functionalty of a client/server web application that Django also provides. 
 
-With this project template you can write regular python scripts and use Django's excellent ORM functionality with the database backend of your choice. This makes it convienient for Djangonauts to write database driven python applications with the familiar and well polished Django ORM. Enjoy.
+## What’s in this project?
 
-:gear: Requirements
--------------------
-- Last tested successfully with Python 3.10.4 and Django 5.0.6
-- Create venv and pip install django to import the required modules.
+- **Cash Register Demo (Django ORM):** A lightweight product lookup UI that lets me scan short UPC codes (`1001`…`1010`), append scanned items to a list, and watch the subtotal update instantly.
+- **Seeding & Convenience Runner:** `main.py` seeds demo products and launches the dev server in one command so the reviewer doesn’t need to remember multiple steps.
+- **Energy Efficiency Scenario:** Our group’s quality attribute scenario for a mobile health-tracking app, with tactics mapped to *Software Architecture in Practice* and the Design Concepts Catalog.
 
-:open_file_folder: File Structure
----------------------------------
+Stack: Python 3.13, Django 5.x, SQLite.
+
+
+## Quick Start
+
+Create a folder for your project on your local machine  
 ```
-django-orm/
-├── db/
-│   ├── __init__.py
-│   └── models.py
-├── main.py
-├── manage.py
-├── README.md
-└── settings.py
+mkdir assignment3
+cd assignment3
 ```
 
-__The main.py file is the entry point for the project, and where you start your code. You automatically get access to your models via ```from db.models import *```
-Think of it like a plain old python file, but now with the addition of Django's feature-rich models.__ :smiling_face_with_three_hearts:
-
-__The db/models.py is where you configure your typical Django models.__ There is a toy user model included as a simple example. After running the migrations command in the quick setup below, a db.sqlite3 file will be generated. The settings.py file is where can swap out the sqlite3 database for another database connection, such as Postgres or AmazonRDS, if you wish. For most applications, sqlite3 will be powerful enough. But if you need to swap databases down the road, you can easily do so, which is one of the benefits of using the Django ORM. 
-
-:rocket: Quick Setup
---------------------
-Create a folder for your project on your local machine
+Create a virtual environment and install Django  
 ```
-mkdir myproject; cd myproject
-```
-Create a virtual environment and install django
-```
-python -m venv venv; source venv/bin/activate; pip install django
-```
-Download this project template from GitHub
-```
-git clone git@github.com:dancaron/Django-ORM.git; cd Django-ORM
-```
-Initialize the database
-```
-python manage.py makemigrations db; python manage.py migrate
-```
-Run the project
-```
-python main.py
+py -3 -m venv .venv
+.\.venv\Scripts\activate
+pip install django
 ```
 
-Feel free to send pull requests if you want to improve this project.
-
-:crystal_ball: Example
-----------------------
-After running Quick Start above: 
-
-Code in db/models.py:
+Download this assignment repository from GitHub  
 ```
-# Sample User model
-class User(models.Model):
-    name = models.CharField(max_length=50, default='Dan')
-
-    def __str__(self):
-        return self.name
-```
-Code in main.py:
-```
-# Seed a few users in the database
-User.objects.create(name='Dan')
-User.objects.create(name='Robert')
-
-for u in User.objects.all():
-    print(f'ID: {u.id} \tUsername: {u.name}')
-```
-Output from command: ```python main.py```
-```
-ID: 1	Username: Dan
-ID: 2	Username: Robert
+git clone https://github.com/OTUSOFE365025/assignment-3-django-and-energy-group-26-crn-45894.git
+cd assignment-3-django-and-energy-group-26-crn-45894
 ```
 
-:mortar_board: Django Models
-----------------------------
+Initialize the database  
+```
+py -3 manage.py migrate
+py -3 manage.py seed_products
+```
 
-Link: [How to Use Django Models](https://docs.djangoproject.com/en/3.1/topics/db/models/)
+Run the project  
+```
+py -3 main.py
+```
 
-License
--------
+![alt text](terminal_output.png)
 
-The MIT License (MIT) Copyright (c) 2024 Dan Caron
+Open `http://127.0.0.1:8000/` in a browser. Enter any demo code (for example `1001`) and click **Scan** as many times as you like. Each scan appends to the list and updates the subtotal automatically. Stop the server with `CTRL+C`.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+![alt text](website_output.png)
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+Prefer standard Django commands?
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+```powershell
+py -3 manage.py migrate
+py -3 manage.py seed_products
+py -3 manage.py runserver
+```
+
+
+## Repo map 
+
+| Path | Why it matters |
+| --- | --- |
+| `settings.py` | Django configuration + SQLite database setup. |
+| `manage.py` | Standard Django management entry point. |
+| `main.py` | My convenience runner that seeds demo data and launches the dev server. |
+| `db/models.py` | Defines the `Product` model (UPC, name, price) plus a toy `User`. |
+| `db/views.py` | Contains the HTML view and JSON endpoint used by the scanning UI. |
+| `db/templates/db/product_lookup.html` | The single-page UI for entering UPCs and showing the subtotal. |
+| `db/management/commands/seed_products.py` | Populates the database with easy-to-type demo products. |
+| `db/migrations/` | Schema history so `migrate` works predictably for graders. |
+
+Navigation tips:
+- ORM usage is easiest to see in `db/models.py` and the queries inside `db/views.py`.
+- The JavaScript that handles scanning and subtotal updates lives inline in the template (look for the `<script>` block near the bottom of `product_lookup.html`).
+
+
+## Part 1 – Cash Register System
+
+**Description:**  
+Designed and analyzed the architecture for a **Cash Register System** using the provided requirements document.  
+The goal was to identify the appropriate **reference architecture** and outline how it meets the system’s needs.
+
+**Key Decisions:**  
+- Selected **Rich Client Application Architecture** as the most suitable choice.  
+- This architecture allows the system to:  
+  - Operate **offline or intermittently connected**, ensuring continued functionality without constant internet access.  
+  - Provide a **fast, responsive interface** for immediate transactions.  
+  - Interact directly with **local hardware** (printers, scanners, card readers).  
+  - Synchronize with back-office servers when a connection is available.  
+- The design leverages local data storage for reliability and performance while supporting synchronization for sales uploads and catalog updates.
+
+**Outcome:**  
+A well-structured rich-client model that balances **availability**, **performance**, and **maintainability**, aligning with retail point-of-sale requirements.
+
+
+## Part 2 – Energy Efficiency (Quality Attribute Scenario)
+
+**Description:**  
+Defined a concrete **Energy Efficiency Quality Attribute Scenario** and identified relevant **architectural tactics** for a **mobile health-tracking application**.  
+The analysis followed the *Energy Efficiency General Scenario* format and was submitted to Canvas as a PDF.
+
+**Deliverables:**  
+- Completed **Energy Efficiency Quality Attribute Table** (Source, Stimulus, Artifacts, Environment, Response, Response Measures).  
+- Explained four key **tactics**:  
+  1. **Adaptive Sampling / Duty Cycling**  
+  2. **Batching and Deferred Execution**  
+  3. **Energy-Aware Networking**  
+  4. **Energy-Efficient UI Rendering**  
+- Linked tactics to design concepts from *Software Architecture in Practice* and the *Design Concepts Catalog*.  
+- Submitted the formatted document as a **PDF on Canvas**.
+
+
+## Contributors
+**Pranav Ashok Chaudhari** – Part 1 : Cash Register System  
+**Ivan Arudpiragasam** – Part 2 : Energy Efficiency  
+**Ahmad Almaraee** – Documentation & Review
+
+
+## License
+
+Released under the MIT License.
+
+
+<img width="512" height="512" alt="image" src="https://github.com/user-attachments/assets/d618e48c-dbc3-4610-a978-709c4841b5c7" />
+
+
