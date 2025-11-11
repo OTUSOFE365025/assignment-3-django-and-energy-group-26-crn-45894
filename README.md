@@ -14,7 +14,8 @@ This section defines a concrete **Energy Efficiency Quality Attribute Scenario**
 - Linked each tactic to concepts from _Software Architecture in Practice_ and the _Design Concepts Catalog_
 - Formatted and submitted the final document as a **PDF on Canvas**
 
-**Contributors:**  
-_Pranav Ashok_
-_Ivan Arudpiragasam_
-_Ahmad Amaree_
+**Contributors:**
+
+**Pranav Ashok** – Part 1 : Cash Register System  
+**Ivan Arudpiragasam** – Part 2 : Energy Efficiency  
+**Ahmad Amaree** – Documentation & review
