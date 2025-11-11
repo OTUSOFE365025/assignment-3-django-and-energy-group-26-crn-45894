@@ -6,6 +6,15 @@ BASE_DIR = Path(__file__).resolve().parent
 # SECURITY WARNING: Modify this secret key if using in production!
 SECRET_KEY = "6few3nci_q_o@l1dlbk81%wcxe!*6r29yu629&d97!hiqat9fa"
 
+# Development settings
+DEBUG = True
+
+# Hosts allowed to serve this application (adjust for production)
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+
+# Root URL configuration (module path to urlpatterns)
+ROOT_URLCONF = 'urls'
+
 # Use BigAutoField for Default Primary Key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -35,3 +44,20 @@ DATABASES = {
 """
 
 INSTALLED_APPS = ("db",)
+
+
+# Basic templates setting so Django will find app templates
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.template.context_processors.static',
+            ],
+        },
+    },
+]

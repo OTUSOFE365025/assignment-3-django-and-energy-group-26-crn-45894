@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cash Register - Scan Product</title>
+    <style>
+      :root{
+        --bg:#f6f8fb;
+        --card:#ffffff;
+        --muted:#6b7280;
+        --accent:#2563eb;
+        --success:#16a34a;
+        --danger:#dc2626;
+        --radius:10px;
+      }
+      html,body{height:100%;}
+      body{
+        margin:0; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        background: linear-gradient(180deg, var(--bg), #eef2ff); display:flex; align-items:center; justify-content:center; padding:40px 16px;
+      }
+      .container{width:100%; max-width:900px}
+      header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+      .logo{width:56px;height:56px;border-radius:12px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:20px}
+      h1{margin:0;font-size:1.4rem}
+      p.lead{margin:0;color:var(--muted);font-size:0.95rem}
+
+      .card{background:var(--card);border-radius:var(--radius);box-shadow:0 6px 18px rgba(15,23,42,0.08);padding:20px;margin-bottom:16px}
+      form{display:flex;gap:12px;align-items:center}
+      .input {
+        display:flex;align-items:center;gap:8px;background:#f8fafc;padding:8px;border-radius:8px;border:1px solid #e6eef8;flex:1;
+      }
+      .input input{border:0;background:transparent;outline:none;padding:8px 6px;font-size:1rem;width:100%}
+      .btn{background:var(--accent);color:#fff;padding:10px 16px;border-radius:8px;border:0;cursor:pointer}
+      .btn.secondary{background:#374151}
+
+      .result{display:flex;gap:16px;align-items:center}
+      .thumbnail{width:96px;height:96px;border-radius:8px;background:linear-gradient(135deg,#eef2ff,#e0f2fe);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent)}
+      .meta{flex:1}
+      .meta h3{margin:0 0 6px 0}
+      .price{font-size:1.25rem;font-weight:700;color:var(--success)}
+      .notfound{color:var(--danger);font-weight:600}
+
+      @media (max-width:640px){
+        .result{flex-direction:column;align-items:flex-start}
+        .thumbnail{width:100%;height:140px}
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="logo">CR</div>
+        <div>
+          <h1>Cash Register — Scan Product</h1>
+          <p class="lead">Enter a product UPC to lookup name and price. This demo uses the Django ORM.</p>
+        </div>
+      </header>
+
+      <div class="card">
+        <form id="scan-form" method="post" autocomplete="off">
+          {% csrf_token %}
+          <div class="input">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 7h2v10H3V7zm4 0h2v10H7V7zm4 0h4v10h-4V7z" fill="#9aa4b2"/></svg>
+            <input type="text" id="upc" name="upc" value="{{ query }}" placeholder="e.g. 1001" required />
+          </div>
+          <button class="btn" type="submit">Scan</button>
+          <button class="btn secondary" id="clear-list" type="button">Clear</button>
+        </form>
+      </div>
+
+      <!-- Scanned items & subtotal (JS-driven) -->
+      <div class="card" id="scanned-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="font-weight:700">Scanned items</div>
+          <div style="text-align:right">
+            <div style="font-size:0.85rem;color:var(--muted)">Subtotal</div>
+            <div id="subtotal" style="font-weight:800;font-size:1.1rem">$0.00</div>
+          </div>
+        </div>
+        <div style="color:var(--muted);font-size:0.9rem;margin-bottom:8px">Try codes: <strong>1001</strong>, <strong>1002</strong>, <strong>1003</strong></div>
+        <div id="scanned-list" style="max-height:260px;overflow-y:auto;border-top:1px dashed #eef2ff;padding-top:8px">
+          <!-- items will be appended here -->
+        </div>
+      </div>
+
+      <!-- Server-rendered single-result fallback for non-JS users -->
+      {% if product %}
+        <div class="card result">
+          <div class="thumbnail">IMG</div>
+          <div class="meta">
+            <h3>{{ product.name }}</h3>
+            <div style="color:var(--muted);">UPC: <strong>{{ product.upc }}</strong></div>
+            <div style="margin-top:8px" class="price">${{ product.price }}</div>
+          </div>
+          <div style="text-align:right;min-width:120px;color:var(--muted)">
+            <div style="font-size:0.85rem">Availability</div>
+            <div style="font-weight:700;color:#10b981">In stock</div>
+          </div>
+        </div>
+      {% elif query %}
+        <div class="card">
+          <div class="notfound">No product found for UPC "{{ query }}".</div>
+        </div>
+      {% endif %}
+
+      <script>
+        (function(){
+          const form = document.getElementById('scan-form');
+          const upcInput = document.getElementById('upc');
+          const list = document.getElementById('scanned-list');
+          const subtotalEl = document.getElementById('subtotal');
+          const clearBtn = document.getElementById('clear-list');
+
+          let subtotal = 0.0;
+
+          function toMoney(v){
+            return '$' + Number(v).toFixed(2);
+          }
+
+          function appendItem(item){
+            const row = document.createElement('div');
+            row.style.display = 'flex';
+            row.style.justifyContent = 'space-between';
+            row.style.alignItems = 'center';
+            row.style.padding = '8px 6px';
+            row.style.borderBottom = '1px solid #f3f6fb';
+
+            const left = document.createElement('div');
+            left.style.display = 'flex';
+            left.style.flexDirection = 'column';
+            left.innerHTML = `<div style="font-weight:700">${item.name}</div><div style="color:var(--muted);font-size:0.9rem">UPC: ${item.upc}</div>`;
+
+            const right = document.createElement('div');
+            right.style.fontWeight = '700';
+            right.textContent = toMoney(item.price);
+
+            row.appendChild(left);
+            row.appendChild(right);
+            list.appendChild(row);
+            // keep newest visible
+            list.scrollTop = list.scrollHeight;
+          }
+
+          function updateSubtotal(amount){
+            subtotal += Number(amount);
+            subtotalEl.textContent = toMoney(subtotal);
+          }
+
+          clearBtn.addEventListener('click', function(){
+            list.innerHTML = '';
+            subtotal = 0.0;
+            subtotalEl.textContent = toMoney(0);
+          });
+
+          form.addEventListener('submit', function(ev){
+            ev.preventDefault();
+            const upc = upcInput.value.trim();
+            if(!upc) return;
+
+            // Send JSON POST to lookup endpoint
+            fetch('{% url "product_lookup_json" %}', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                // CSRF token is available in the hidden input if needed
+                'X-Requested-With': 'XMLHttpRequest'
+              },
+              body: JSON.stringify({ upc: upc })
+            }).then(async res => {
+              if(res.ok){
+                const data = await res.json();
+                if(data && data.found){
+                  // price is string on server, convert to number
+                  const price = parseFloat(data.price || 0);
+                  appendItem({ upc: data.upc, name: data.name, price: price });
+                  updateSubtotal(price);
+                  upcInput.value = '';
+                  upcInput.focus();
+                } else {
+                  // not found
+                  const nf = document.createElement('div');
+                  nf.className = 'notfound';
+                  nf.textContent = 'No product found for UPC ' + upc;
+                  list.appendChild(nf);
+                }
+              } else if (res.status === 404){
+                const data = await res.json().catch(()=>({}));
+                const nf = document.createElement('div');
+                nf.className = 'notfound';
+                nf.textContent = (data && data.upc) ? ('No product found for UPC ' + data.upc) : ('Product not found');
+                list.appendChild(nf);
+              } else {
+                const data = await res.json().catch(()=>({}));
+                const err = document.createElement('div');
+                err.style.color = 'var(--danger)';
+                err.textContent = (data && data.error) ? data.error : 'Lookup error';
+                list.appendChild(err);
+              }
+            }).catch(err => {
+              const e = document.createElement('div');
+              e.style.color = 'var(--danger)';
+              e.textContent = 'Network error';
+              list.appendChild(e);
+            });
+          });
+        })();
+      </script>
+
+      <footer style="text-align:center;color:var(--muted);font-size:0.9rem;margin-top:18px">Built with Django ORM — demo UI</footer>
+    </div>
+  </body>
+</html>
