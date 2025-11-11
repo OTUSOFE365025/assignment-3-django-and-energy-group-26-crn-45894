@@ -114,9 +114,9 @@ The analysis followed the *Energy Efficiency General Scenario* format and was su
 
 
 ## Contributors
-**Pranav Ashok** – Part 1 : Cash Register System  
+**Pranav Ashok Chaudhari** – Part 1 : Cash Register System  
 **Ivan Arudpiragasam** – Part 2 : Energy Efficiency  
-**Ahmad Amaree** – Documentation & Review
+**Ahmad Almaraee** – Documentation & Review
 
 
 ## License
