@@ -138,5 +138,6 @@ The analysis followed the *Energy Efficiency General Scenario* format and was su
 Released under the MIT License.
 
 
-Thank you for reviewing our assignment!
+<img width="512" height="512" alt="image" src="https://github.com/user-attachments/assets/d618e48c-dbc3-4610-a978-709c4841b5c7" />
+
 
