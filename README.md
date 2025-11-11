@@ -80,11 +80,6 @@ Navigation tips:
 
 - Manual test case: enter `1001` three times → scanned list shows three phones and subtotal reads `$2999.97`.
 
-If the TA wants actual screenshots, I can drop PNGs into a `docs/` folder and link them here—just let me know.
-
----
-
-# Assignment 3 – Django and Energy (Group 26 – CRN 45894)
 
 ## Part 1 – Cash Register System
 
