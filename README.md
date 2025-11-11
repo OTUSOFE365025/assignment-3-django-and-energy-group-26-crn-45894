@@ -27,6 +27,7 @@ pip install django
 # 3) Seed products + start dev server (single command I prepared)
 py -3 main.py
 ```
+![alt text](image.png)
 
 Open a browser to `http://127.0.0.1:8000/`. Enter a short code like `1001` and press **Scan** repeatedly. The UI keeps a scrollable list of scanned items and updates the subtotal automatically. To stop the server, press `CTRL+C` in the terminal.
 
@@ -37,6 +38,7 @@ py -3 manage.py migrate
 py -3 manage.py seed_products
 py -3 manage.py runserver
 ```
+![alt text](image-1.png)
 
 ---
 
@@ -58,28 +60,6 @@ Navigation tips:
 - The JavaScript that handles scanning and subtotal updates lives inline in the template (look for the `<script>` block near the bottom of `product_lookup.html`).
 
 ---
-
-## 🧪 Demo evidence (textual “screenshots”)
-
-- After seeding/products setup, my script prints:
-
-    ```
-    Ensured demo short-code products are present.
-    ```
-
-- Example JSON response from `lookup-json/`:
-
-    ```json
-    {
-        "found": true,
-        "upc": "1001",
-        "name": "Apple iPhone 15",
-        "price": "999.99"
-    }
-    ```
-
-- Manual test case: enter `1001` three times → scanned list shows three phones and subtotal reads `$2999.97`.
-
 
 ## Part 1 – Cash Register System
 
